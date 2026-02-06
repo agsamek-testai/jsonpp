@@ -1,0 +1,139 @@
+(function (root) {
+  "use strict";
+
+  function repeatChar(char, count) {
+    var result = "";
+    var i;
+    for (i = 0; i < count; i += 1) {
+      result += char;
+    }
+    return result;
+  }
+
+  function indentTabs(count) {
+    return repeatChar("\t", count);
+  }
+
+  function isPlainObject(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function render(value, indent, maxWidth, baseIndent) {
+    var compact = JSON.stringify(value);
+    if (compact.length + baseIndent <= maxWidth) {
+      return compact;
+    }
+
+    if (Array.isArray(value)) {
+      return renderList(value, indent, maxWidth, baseIndent);
+    }
+
+    if (isPlainObject(value)) {
+      return renderObject(value, indent, maxWidth, baseIndent);
+    }
+
+    return compact;
+  }
+
+  function renderList(values, indent, maxWidth, baseIndent) {
+    if (!values.length) {
+      return "[]";
+    }
+
+    var lines = [];
+    var i;
+    var itemStr;
+    var itemLines;
+    var j;
+
+    lines.push(indentTabs(baseIndent) + "[");
+    for (i = 0; i < values.length; i += 1) {
+      itemStr = render(values[i], indent, maxWidth, 0);
+      itemLines = itemStr.split("\n");
+      for (j = 0; j < itemLines.length; j += 1) {
+        lines.push(indentTabs(baseIndent + indent) + itemLines[j]);
+      }
+      if (i < values.length - 1) {
+        lines[lines.length - 1] += ",";
+      }
+    }
+    lines.push(indentTabs(baseIndent) + "]");
+
+    return lines.join("\n");
+  }
+
+  function renderObject(values, indent, maxWidth, baseIndent) {
+    var keys = Object.keys(values);
+    if (!keys.length) {
+      return "{}";
+    }
+
+    var lines = [];
+    var i;
+    var key;
+    var keyStr;
+    var valueStr;
+    var inlineFits;
+
+    lines.push(indentTabs(baseIndent) + "{");
+    for (i = 0; i < keys.length; i += 1) {
+      key = keys[i];
+      keyStr = JSON.stringify(key);
+      valueStr = render(values[key], indent, maxWidth, baseIndent + indent);
+      inlineFits = valueStr.indexOf("\n") === -1 &&
+        keyStr.length + 2 + valueStr.length + baseIndent + indent <= maxWidth;
+
+      if (inlineFits) {
+        lines.push(indentTabs(baseIndent + indent) + keyStr + ": " + valueStr);
+      } else {
+        if (Array.isArray(values[key]) || isPlainObject(values[key])) {
+          valueStr = render(values[key], indent, maxWidth, 0);
+          var valueLines = valueStr.split("\n");
+          lines.push(indentTabs(baseIndent + indent) + keyStr + ": " + valueLines[0]);
+          var k;
+          for (k = 1; k < valueLines.length; k += 1) {
+            lines.push(indentTabs(baseIndent + indent) + valueLines[k]);
+          }
+        } else {
+          lines.push(indentTabs(baseIndent + indent) + keyStr + ":");
+          valueStr = render(values[key], indent, maxWidth, 0);
+          var scalarLines = valueStr.split("\n");
+          var s;
+          for (s = 0; s < scalarLines.length; s += 1) {
+            lines.push(indentTabs(baseIndent + indent * 2) + scalarLines[s]);
+          }
+        }
+      }
+
+      if (i < keys.length - 1) {
+        lines[lines.length - 1] += ",";
+      }
+    }
+
+    lines.push(indentTabs(baseIndent) + "}");
+    return lines.join("\n");
+  }
+
+  function formatJson(value, options) {
+    var settings = options || {};
+    var indent = typeof settings.indent === "number" ? settings.indent : 1;
+    var maxWidth = typeof settings.maxWidth === "number" ? settings.maxWidth : 80;
+
+    if (indent < 0) {
+      throw new Error("indent must be non-negative");
+    }
+    if (maxWidth <= 0) {
+      throw new Error("maxWidth must be positive");
+    }
+
+    return render(value, indent, maxWidth, 0);
+  }
+
+  var api = { formatJson: formatJson };
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  } else {
+    root.jsonpp = api;
+  }
+}(this));
