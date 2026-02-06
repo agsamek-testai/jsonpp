@@ -39,8 +39,8 @@ This produces `dist/jsonpp.min.js` for quick browser usage.
 
 ## Playground
 
-Open `example/index.html` in a browser to try the formatter interactively.
-Make sure you build `dist/jsonpp.min.js` first.
+Open `docs/index.html` in a browser to try the formatter interactively. To
+refresh the GitHub Pages bundle, run `./scripts/sync_docs_bundle.sh`.
 
 ## Tests (QuickJS)
 
