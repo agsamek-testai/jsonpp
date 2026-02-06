@@ -1,0 +1,7 @@
+{
+	"title":
+		"This is a long title",
+	"values": [1,2,3,4],
+	"flag": true,
+	"note": null
+}

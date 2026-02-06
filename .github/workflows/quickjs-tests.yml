@@ -1,0 +1,20 @@
+name: QuickJS Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quickjs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install QuickJS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y quickjs
+
+      - name: Run tests
+        run: qjs tests/run_tests.js

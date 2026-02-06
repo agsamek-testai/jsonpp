@@ -1,0 +1,12 @@
+{
+	"name": "Alex",
+	"tags": [
+		"json",
+		"pretty",
+		"printer"
+	],
+	"meta": {
+		"active": true,
+		"score": 42
+	}
+}
