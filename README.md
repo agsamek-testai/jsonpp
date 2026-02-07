@@ -27,20 +27,17 @@ var data = {
 console.log(jsonpp.formatJson(data, { indent: 1, maxWidth: 40 }));
 ```
 
-## Minimal build
-
-The minimal build can be generated with:
-
-```sh
-./scripts/build_minified.sh
-```
-
-This produces `dist/jsonpp.min.js` for quick browser usage.
-
 ## Playground
 
 Open `docs/index.html` in a browser to try the formatter interactively. To
 refresh the GitHub Pages bundle, run `./scripts/sync_docs_bundle.sh`.
+
+To sync the docs bundle automatically on every commit, install the repo git
+hooks once:
+
+```sh
+./scripts/install_git_hooks.sh
+```
 
 ## Tests (QuickJS)
 

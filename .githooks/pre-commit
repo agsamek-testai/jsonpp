@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+./scripts/sync_docs_bundle.sh
+
+git add docs/dist/jsonpp.js
