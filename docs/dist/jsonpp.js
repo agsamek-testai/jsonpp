@@ -18,8 +18,45 @@
     return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
+  function addSpacesToCompact(json) {
+    var result = "";
+    var inString = false;
+    var escaped = false;
+    var i;
+    var ch;
+
+    for (i = 0; i < json.length; i += 1) {
+      ch = json.charAt(i);
+      if (inString) {
+        result += ch;
+        if (escaped) {
+          escaped = false;
+        } else if (ch === "\\") {
+          escaped = true;
+        } else if (ch === "\"") {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (ch === "\"") {
+        inString = true;
+        result += ch;
+        continue;
+      }
+
+      if (ch === ":" || ch === ",") {
+        result += ch + " ";
+      } else {
+        result += ch;
+      }
+    }
+
+    return result;
+  }
+
   function render(value, indent, maxWidth, baseIndent) {
-    var compact = JSON.stringify(value);
+    var compact = addSpacesToCompact(JSON.stringify(value));
     if (compact.length + baseIndent <= maxWidth) {
       return compact;
     }
