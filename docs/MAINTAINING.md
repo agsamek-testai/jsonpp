@@ -7,9 +7,28 @@ supporting assets. Follow the steps below to keep changes consistent.
 
 - `src/jsonpp.js` is the source implementation.
 - `dist/jsonpp.min.js` is a generated minified build derived from `src/jsonpp.js`.
+- `docs/dist/jsonpp.js` is the GitHub Pages bundle copied from `src/jsonpp.js`.
 
 If you change `src/jsonpp.js`, regenerate the minified build via
 `./scripts/build_minified.sh`.
+Refresh the docs bundle via `./scripts/sync_docs_bundle.sh`.
+
+## Generated assets on commit
+
+For local development (including Codex environments), install the repo git
+hooks once:
+
+```sh
+./scripts/install_git_hooks.sh
+```
+
+The pre-commit hook runs:
+
+- `./scripts/build_minified.sh`
+- `./scripts/sync_docs_bundle.sh`
+
+On GitHub, the `Verify generated assets` workflow runs the same scripts and
+fails if the working tree changes, ensuring generated files are committed.
 
 ## Formatting rules
 

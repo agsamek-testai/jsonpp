@@ -37,6 +37,13 @@ The minimal build can be generated with:
 
 This produces `dist/jsonpp.min.js` for quick browser usage.
 
+To generate the minified build and refresh the docs bundle on every commit,
+install the repo git hooks once:
+
+```sh
+./scripts/install_git_hooks.sh
+```
+
 ## Playground
 
 Open `docs/index.html` in a browser to try the formatter interactively. To

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+./scripts/build_minified.sh
+./scripts/sync_docs_bundle.sh
+
+git add dist/jsonpp.min.js docs/dist/jsonpp.js
